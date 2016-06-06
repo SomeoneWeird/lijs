@@ -111,6 +111,17 @@ describe('tokenizer', function () {
     })
   })
 
+  describe('FloatLiteral', function () {
+    it('should parse FloatLiteral', function () {
+      var code = '4.2'
+      var tokens = tokenizer(code)
+      assert.deepEqual(tokens, [ {
+        type: 'FloatLiteral',
+        value: '4.2'
+      } ])
+    })
+  })
+
   describe('should be able to mix literal types', function () {
     it('Literal + NumberLiteral', function () {
       var code = 'hello 137 world 42'
@@ -182,6 +193,45 @@ describe('tokenizer', function () {
       }, {
         type: 'NumberLiteral',
         value: '3'
+      } ])
+    })
+
+    it('Literal + FloatLiteral', function () {
+      var code = 'one 4.2'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'Literal',
+        value: 'one'
+      }, {
+        type: 'FloatLiteral',
+        value: '4.2'
+      } ])      
+    })
+
+    it('NumberLiteral + FloatLiteral', function () {
+      var code = '42 4.2'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'NumberLiteral',
+        value: '42'
+      }, {
+        type: 'FloatLiteral',
+        value: '4.2'
+      } ])
+    })
+
+    it('StringLiteral + FloatLiteral', function () {
+      var code = "'hello' 4.20"
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'StringLiteral',
+        value: 'hello'
+      }, {
+        type: 'FloatLiteral',
+        value: '4.20'
       } ])
     })
   })
