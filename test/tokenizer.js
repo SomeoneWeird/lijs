@@ -87,6 +87,18 @@ describe('tokenizer', function () {
         } ])
       })
     })
+
+    it('should support numbers in strings', function () {
+      var code = "'hello world 1337' 'hi 42'"
+      var tokens = tokenizer(code)
+      assert.deepEqual(tokens, [ {
+        type: 'StringLiteral',
+        value: 'hello world 1337'
+      }, {
+        type: 'StringLiteral',
+        value: 'hi 42'
+      } ])
+    })
   })
 
   describe('should be able to mix literal types', function () {
@@ -144,6 +156,22 @@ describe('tokenizer', function () {
       }, {
         type: 'NumberLiteral',
         value: '137'
+      } ])
+    })
+
+    it('Literal + NumberLiteral + StringLiteral', function () {
+      var code = "'one' two 3"
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'StringLiteral',
+        value: 'one'
+      }, {
+        type: 'Literal',
+        value: 'two'
+      }, {
+        type: 'NumberLiteral',
+        value: '3'
       } ])
     })
   })
