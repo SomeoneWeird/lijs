@@ -38,6 +38,16 @@ describe('tokenizer', function () {
           value: 'c'
         } ])
       })
+
+      it('should support number in literal (not first char)', function () {
+        var code = 'a1'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'a1'
+        } ])
+      })
     })
 
     describe('NumberLiteral', function () {
