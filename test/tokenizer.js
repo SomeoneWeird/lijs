@@ -1,9 +1,9 @@
+/* eslint-env node, mocha */
 var assert = require('assert')
 
 var tokenizer = require('../lib/tokenizer')
 
 describe('tokenizer', function () {
-
   describe('Whitespace', function () {
     it('should skip whitespace', function () {
       assert.equal(tokenizer('    ').length, 0)
@@ -21,7 +21,6 @@ describe('tokenizer', function () {
   })
 
   describe('Literals', function () {
-
     describe('Literal', function () {
       it('should parse literal', function () {
         var code = 'a b c'

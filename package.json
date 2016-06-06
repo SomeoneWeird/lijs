@@ -7,8 +7,16 @@
     "test": "test"
   },
   "scripts": {
+    "pretest": "standard | snazzy",
     "test": "mocha --bail"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mocha": "^2.5.3"
+  },
+  "devDependencies": {
+    "snazzy": "^4.0.0",
+    "standard": "^7.1.2"
+  }
 }
