@@ -1,0 +1,14 @@
+{
+  "name": "compiler2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --bail"
+  },
+  "author": "",
+  "license": "ISC"
+}
