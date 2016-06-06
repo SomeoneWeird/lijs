@@ -235,4 +235,38 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('Assignment', function () {
+    it('should parse properly', function () {
+      var code = '$'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'AssignmentOperator'
+      } ])
+    })
+  })
+
+  describe('Array', function () {
+    describe('ArrayStart', function () {
+      it('should parse properly', function () {
+        var code = '['
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'ArrayStart'
+        } ])
+      })
+    })
+    describe('ArrayEnd', function () {
+      it('should parse properly', function () {
+        var code = ']'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'ArrayEnd'
+        } ])
+      })
+    })
+  })
 })
