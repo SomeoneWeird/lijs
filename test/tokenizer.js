@@ -1,4 +1,6 @@
 /* eslint-env node, mocha */
+require('babel-register')
+
 var assert = require('assert')
 
 var tokenizer = require('../lib/tokenizer')
