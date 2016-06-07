@@ -15,7 +15,6 @@ function getBaseAST (code) {
 
 function testAST (code, m) {
   var ast = getBaseAST(code)
-  console.log(JSON.stringify(ast, null, 2))
   assert.deepEqual(ast, m)
 }
 
@@ -54,6 +53,21 @@ describe('AST', function () {
         }, {
           type: 'StringLiteral',
           value: 'world'
+        } ]
+      } ])
+    })
+    it('should be able to generate nested arrays', function () {
+      testAST('[ [ 1 ] 2 ]', [ {
+        type: 'Array',
+        elements: [ {
+          type: 'Array',
+          elements: [ {
+            type: 'NumberLiteral',
+            value: '1'
+          } ]
+        }, {
+          type: 'NumberLiteral',
+          value: '2'
         } ]
       } ])
     })
