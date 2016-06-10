@@ -19,6 +19,43 @@ function testAST (code, m) {
 }
 
 describe('AST', function () {
+  describe('FunctionCall', function () {
+    it('should error if function name is invalid', function () {
+      assert.throws(function () {
+        testAST('(4 4)')
+      }, /Function call name must be literal/)
+    })
+    it('should generate AST for FunctionCall', function () {
+      testAST('(echo hello)', [ {
+        type: 'FunctionCall',
+        name: 'echo',
+        args: [ {
+          type: 'Literal',
+          value: 'hello'
+        } ]
+      } ])
+    })
+    it('should generate AST for FunctionCall as FunctionCall parameter', function () {
+      testAST('(add 5 (add 10 11))', [ {
+        type: 'FunctionCall',
+        name: 'add',
+        args: [ {
+          type: 'NumberLiteral',
+          value: '5'
+        }, {
+          type: 'FunctionCall',
+          name: 'add',
+          args: [ {
+            type: 'NumberLiteral',
+            value: '10'
+          }, {
+            type: 'NumberLiteral',
+            value: '11'
+          } ]
+        }]
+      } ])
+    })
+  })
   describe('Array', function () {
     it('should generate blank array', function () {
       testAST('[]', [ {
@@ -56,7 +93,7 @@ describe('AST', function () {
         } ]
       } ])
     })
-    it('should be able to generate nested arrays', function () {
+    it('should generate array with nested arrays', function () {
       testAST('[ [ 1 ] 2 ]', [ {
         type: 'Array',
         elements: [ {
@@ -68,6 +105,25 @@ describe('AST', function () {
         }, {
           type: 'NumberLiteral',
           value: '2'
+        } ]
+      } ])
+    })
+    it('should generate array with FunctionCall', function () {
+      testAST('[ (a 1 2) 5 ]', [ {
+        type: 'Array',
+        elements: [ {
+          type: 'FunctionCall',
+          name: 'a',
+          args: [ {
+            type: 'NumberLiteral',
+            value: '1'
+          }, {
+            type: 'NumberLiteral',
+            value: '2'
+          } ]
+        }, {
+          type: 'NumberLiteral',
+          value: '5'
         } ]
       } ])
     })
@@ -142,6 +198,23 @@ describe('AST', function () {
           }, {
             type: 'Literal',
             value: 'd'
+          } ]
+        }
+      } ])
+    })
+    it('should generate AST for assignment where value is FunctionCall', function () {
+      testAST('$ four (add 1 3)', [ {
+        type: 'Assignment',
+        name: 'four',
+        value: {
+          type: 'FunctionCall',
+          name: 'add',
+          args: [ {
+            type: 'NumberLiteral',
+            value: '1'
+          }, {
+            type: 'NumberLiteral',
+            value: '3'
           } ]
         }
       } ])
