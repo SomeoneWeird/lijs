@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+require('colors')
+
+require('babel-register')
+
+var compiler = require('../lib/compiler')
+
+var repl = require('repl')
+
+repl.start({
+  prompt: 'code> ',
+  input: process.stdin,
+  output: process.stdout,
+  eval: eval
+})
+
+function eval (cmd, context, filename, callback) {
+ try {
+   var out = compiler(cmd)
+   console.log(out.green)
+ } catch (e) {
+   console.error(e.stack.red)
+ }
+ callback()
+}

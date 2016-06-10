@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+var fs = require('fs')
+var path = require('path')
+
+var tokenizer = require('../lib/tokenizer')
+
+var p = process.argv[2]
+
+if(!p) {
+  console.error('need file')
+  process.exit(1)
+}
+
+var code = fs.readFileSync(path.resolve(process.cwd(), p)).toString()
+
+console.log(tokenizer(code))

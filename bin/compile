@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+var fs = require('fs')
+var path = require('path')
+
+var compiler = require('../lib/compiler')
+
+var p = process.argv[2]
+
+if(!p) {
+  console.error('need file')
+  process.exit(1)
+}
+
+var code = fs.readFileSync(path.resolve(process.cwd(), p)).toString()
+
+console.log(compiler(code))

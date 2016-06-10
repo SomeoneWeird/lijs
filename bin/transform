@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+var fs = require('fs')
+var path = require('path')
+
+var tokenizer = require('../lib/tokenizer')
+var ast = require('../lib/ast')
+var transform = require('../lib/transform')
+
+var p = process.argv[2]
+
+if(!p) {
+  console.error('need file')
+  process.exit(1)
+}
+
+var code = fs.readFileSync(path.resolve(process.cwd(), p)).toString()
+
+console.log(JSON.stringify(transform(ast(tokenizer(code))), null, 2))
