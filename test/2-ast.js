@@ -225,4 +225,32 @@ describe('AST', function () {
       }, /Variable value cannot be assignment/)
     })
   })
+  describe('FunctionDefinition', function () {
+    it('should error if name is not literal', function () {
+      assert.throws(function () {
+        testAST('def 2')
+      }, /Function name must be literal/)
+    })
+    it('should generate AST for FunctionDefinition', function () {
+      testAST('def addtwo [ number ] (add number 2)', [ {
+        type: 'FunctionDefinition',
+        name: 'addtwo',
+        args: [ {
+          type: 'Literal',
+          value: 'number'
+        } ],
+        value: {
+          type: 'FunctionCall',
+          name: 'add',
+          args: [ {
+            type: 'Literal',
+            value: 'number'
+          }, {
+            type: 'NumberLiteral',
+            value: '2'
+          } ]
+        }
+      } ])
+    })
+  })
 })

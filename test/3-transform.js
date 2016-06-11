@@ -87,4 +87,41 @@ describe('Transform', function () {
       } ])
     })
   })
+  describe('FunctionDeclaration', function () {
+    it('should generate FunctionDeclaration from FunctionDefinition', function () {
+      testTransform('def addone [ number ] (add number 1)', [ {
+        type: 'FunctionDeclaration',
+        id: {
+          type: 'Identifier',
+          name: 'addone'
+        },
+        params: [ {
+          type: 'Identifier',
+          name: 'number'
+        } ],
+        defaults: [],
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'ReturnStatement',
+            argument: {
+              type: 'CallExpression',
+              callee: {
+                type: 'Identifier',
+                name: 'add'
+              },
+              arguments: [ {
+                type: 'Identifier',
+                name: 'number'
+              }, {
+                type: 'Literal',
+                value: 1,
+                raw: '1'
+              } ]
+            }
+          } ]
+        }
+      } ])
+    })
+  })
 })

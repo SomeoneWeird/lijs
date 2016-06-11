@@ -285,4 +285,15 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('Definition', function () {
+    it('should parse properly', function () {
+      var code = 'def'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'Definition'
+      } ])
+    })
+  })
 })

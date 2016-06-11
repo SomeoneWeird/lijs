@@ -3,6 +3,8 @@
 var fs = require('fs')
 var path = require('path')
 
+require('babel-register')
+
 var compiler = require('../lib/compiler')
 
 var p = process.argv[2]
