@@ -49,6 +49,24 @@ describe('tokenizer', function () {
           value: 'a1'
         } ])
       })
+
+      it('should allow dots in literal', function () {
+        var code = 'a.b'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'a.b'
+        } ])
+      })
+
+      it('should error if dot is first character of literal', function () {
+        var code = '.b'
+
+        assert.throws(function () {
+          tokenizer(code)
+        }, /Unknown token: '.'/)
+      })
     })
 
     describe('NumberLiteral', function () {
