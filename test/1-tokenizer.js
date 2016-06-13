@@ -314,4 +314,25 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('DefinitionPoint', function () {
+    it('should parse opening DefinitionPoint properly', function () {
+      var code = '{'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'DefinitionPoint',
+        value: '{'
+      } ])
+    })
+    it('should parse opening DefinitionPoint properly', function () {
+      var code = '}'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'DefinitionPoint',
+        value: '}'
+      } ])
+    })
+  })
 })

@@ -123,5 +123,70 @@ describe('Transform', function () {
         }
       } ])
     })
+    it('should allow multiple body entries (and should set last to return)', function () {
+      testTransform('def log [ one two ] {\n  $ res (add one two)\n  (console.log res)\n}', [ {
+        type: 'FunctionDeclaration',
+        id: {
+          type: 'Identifier',
+          name: 'log'
+        },
+        params: [ {
+          type: 'Identifier',
+          name: 'one'
+        }, {
+          type: 'Identifier',
+          name: 'two'
+        } ],
+        defaults: [],
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'VariableDeclaration',
+            declarations: [ {
+              type: 'VariableDeclarator',
+              id: {
+                type: 'Identifier',
+                name: 'res'
+              },
+              init: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'Identifier',
+                  name: 'add'
+                },
+                arguments: [ {
+                  type: 'Identifier',
+                  name: 'one'
+                }, {
+                  type: 'Identifier',
+                  name: 'two'
+                } ]
+              }
+            } ],
+            kind: 'var'
+          }, {
+            type: 'ReturnStatement',
+            argument: {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
+              },
+              arguments: [ {
+                type: 'Identifier',
+                name: 'res'
+              } ]
+            }
+          } ]
+        }
+      } ])
+    })
   })
 })

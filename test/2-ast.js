@@ -239,7 +239,7 @@ describe('AST', function () {
           type: 'Literal',
           value: 'number'
         } ],
-        value: {
+        body: [ {
           type: 'FunctionCall',
           name: 'add',
           args: [ {
@@ -249,7 +249,42 @@ describe('AST', function () {
             type: 'NumberLiteral',
             value: '2'
           } ]
-        }
+        } ]
+      } ])
+    })
+    it('should generate AST for multiline FunctionDefinition', function () {
+      testAST('def multi [ one two ] {\n  $ res (add one two)\n  (console.log res)\n}', [ {
+        type: 'FunctionDefinition',
+        name: 'multi',
+        args: [ {
+          type: 'Literal',
+          value: 'one'
+        }, {
+          type: 'Literal',
+          value: 'two'
+        } ],
+        body: [ {
+          type: 'Assignment',
+          name: 'res',
+          value: {
+            type: 'FunctionCall',
+            name: 'add',
+            args: [ {
+              type: 'Literal',
+              value: 'one'
+            }, {
+              type: 'Literal',
+              value: 'two'
+            } ]
+          }
+        }, {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'Literal',
+            value: 'res'
+          } ]
+        } ]
       } ])
     })
   })
