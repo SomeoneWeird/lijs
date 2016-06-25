@@ -335,4 +335,61 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('Comment', function () {
+    it('should parse single line comment', function () {
+      var code = '//hello'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'SingleLineComment',
+        value: 'hello'
+      } ])
+    })
+    it('should parse multiline comment', function () {
+      var code = '/*hello\nworld*/'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'MultiLineComment',
+        values: [ 'hello', 'world' ]
+      } ])
+    })
+    it('should pass multiline comment with blank lines', function () {
+      var code = '/*\n\n\n\n*/'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'MultiLineComment',
+        values: [ '', '', '', '', '' ]
+      } ])
+    })
+    it('should parse single-line multiline-style comment', function () {
+      var code = '/* hello */'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'MultiLineComment',
+        values: [ ' hello ' ]
+      } ])
+    })
+    it('should parse multiline-comment inside single-line comment', function () {
+      var code = '// /* test */'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'SingleLineComment',
+        value: ' /* test */'
+      } ])
+    })
+    it('should parse single-line inside multiline comment', function () {
+      var code = '/*\n//one\n//two\n//three*/'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'MultiLineComment',
+        values: [ '', '//one', '//two', '//three' ]
+      } ])
+    })
+  })
 })

@@ -167,6 +167,16 @@ describe('AST', function () {
       testAST('\n\n\n', [])
     })
   })
+  describe('SingleLineComment', function () {
+    it('should ignore SingleLineComment', function () {
+      testAST('//hello', [])
+    })
+  })
+  describe('MultiLineComment', function () {
+    it('should ignore MultiLineComment', function () {
+      testAST('/*\nhello\n*/', [])
+    })
+  })
   describe('Assignment', function () {
     it('should error if variable name is invalid', function () {
       assert.throws(function () {
