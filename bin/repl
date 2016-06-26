@@ -4,15 +4,66 @@ require('colors')
 
 require('babel-register')
 
+var tokenize = require('../lib/tokenizer')
+var toAST = require('../lib/ast')
+var transform = require('../lib/transform')
 var compiler = require('../lib/compiler')
 
 var repl = require('repl')
 
-repl.start({
+var server = repl.start({
   prompt: 'code> ',
   input: process.stdin,
   output: process.stdout,
   eval: eval
+})
+
+server.defineCommand('tokens', {
+  action: function (input) {
+    this.lineParser.reset()
+    this.bufferedCommand = ''
+    try {
+      var tokens = tokenize(input)
+      console.log(JSON.stringify(tokens, null, 2).green)
+    } catch (e) {
+      console.error(e.stack.red)
+    } finally {
+      this.displayPrompt()
+    }
+  }
+})
+
+server.defineCommand('ast', {
+  action: function (input) {
+    this.lineParser.reset()
+    this.bufferedCommand = ''
+    try {
+      var tokens = tokenize(input)
+      var ast = toAST(tokens)
+      console.log(JSON.stringify(ast, null, 2).green) 
+    } catch (e) {
+      console.error(e.stack.red)
+    } finally {
+      this.displayPrompt()
+    }
+  }
+})
+
+server.defineCommand('transform', {
+  action: function (input) {
+    this.lineParser.reset()
+    this.bufferedCommand = ''
+    try {
+      var tokens = tokenize(input)
+      var ast = toAST(tokens)
+      var transformedAST = transform(ast)
+      console.log(JSON.stringify(transformedAST, null, 2).green)
+    } catch (e) {
+      console.error(e.stack.red)
+    } finally {
+      this.displayPrompt()
+    }
+  }
 })
 
 function eval (cmd, context, filename, callback) {
