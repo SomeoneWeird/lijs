@@ -138,6 +138,13 @@ describe('tokenizer', function () {
           value: '4.2'
         } ])
       })
+      it('should throw if . is last thing', function () {
+        var code = '42.'
+
+        assert.throws(function () {
+          tokenizer(code)
+        }, /invalid character ./)
+      })
     })
 
     describe('should be able to mix literal types', function () {
