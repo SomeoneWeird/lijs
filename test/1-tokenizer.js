@@ -392,4 +392,18 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('ImportStatement', function () {
+    it('should parse properly', function () {
+      var code = "use 'hello'"
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'ImportStatement'
+      }, {
+        type: 'StringLiteral',
+        value: 'hello'
+      } ])
+    })
+  })
 })

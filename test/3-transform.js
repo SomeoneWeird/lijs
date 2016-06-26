@@ -189,4 +189,25 @@ describe('Transform', function () {
       } ])
     })
   })
+  describe('ImportStatement CallExpression', function () {
+    it('should generate CallExpression from ImportStatement', function () {
+      testTransform("use 'hello'", [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'CallExpression',
+          callee: {
+            type: 'Identifier',
+            name: 'require'
+          },
+          arguments: [
+            {
+              type: 'Literal',
+              value: 'hello',
+              raw: "'hello'"
+            }
+          ]
+        }
+      } ])
+    })
+  })
 })
