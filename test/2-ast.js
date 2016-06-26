@@ -305,6 +305,13 @@ describe('AST', function () {
         value: 'hello'
       } ])
     })
+    it('should generate AST for ImportAsStatement', function () {
+      testAST("use 'hello' as hello", [ {
+        type: 'ImportStatement',
+        name: 'hello',
+        value: 'hello'
+      } ])
+    })
     it('should throw if value is not StringLiteral', function () {
       assert.throws(function () {
         testAST('use 5')

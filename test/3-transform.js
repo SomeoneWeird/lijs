@@ -236,5 +236,33 @@ describe('Transform', function () {
         }
       } ])
     })
+    it('should generate Assignment + CallExpression from ImportStatement', function () {
+      testTransform("use 'hello1' as hello2", [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'VariableDeclaration',
+          declarations: [ {
+            type: 'VariableDeclarator',
+            id: {
+              type: 'Identifier',
+              name: 'hello2'
+            },
+            init: {
+              type: 'CallExpression',
+              callee: {
+                type: 'Identifier',
+                name: 'require'
+              },
+              arguments: [ {
+                type: 'Literal',
+                value: 'hello1',
+                raw: "'hello1'"
+              } ]
+            }
+          } ],
+          kind: 'var'
+        }
+      }])
+    })
   })
 })
