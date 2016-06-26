@@ -43,6 +43,33 @@ describe('Transform', function () {
         } ])
       })
     })
+    it('should be able to generate object children', function () {
+      testTransform('a.b.c.d', [ {
+        'type': 'MemberExpression',
+        'object': {
+          'type': 'MemberExpression',
+          'object': {
+            'type': 'MemberExpression',
+            'object': {
+              'type': 'Identifier',
+              'name': 'a'
+            },
+            'property': {
+              'type': 'Identifier',
+              'name': 'b'
+            }
+          },
+          'property': {
+            'type': 'Identifier',
+            'name': 'c'
+          }
+        },
+        'property': {
+          'type': 'Identifier',
+          'name': 'd'
+        }
+      } ])
+    })
   })
   describe('CallExpression', function () {
     it('should generate CallExpression from FunctionCall', function () {
