@@ -318,4 +318,18 @@ describe('AST', function () {
       }, /use statement must use string/)
     })
   })
+
+  describe('ExportStatement', function () {
+    it('should generate AST for ExportStatement', function () {
+      testAST('export lol', [ {
+        type: 'ExportStatement',
+        value: 'lol'
+      } ])
+    })
+    it('should throw if value is not Literal', function () {
+      assert.throws(function () {
+        testAST('export 5')
+      }, /must export literal/)
+    })
+  })
 })

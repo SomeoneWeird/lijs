@@ -432,4 +432,18 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('ExportStatement', function () {
+    it('should parse properly', function () {
+      var code = 'export lol'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'ExportStatement'
+      }, {
+        type: 'Literal',
+        value: 'lol'
+      } ])
+    })
+  })
 })

@@ -55,3 +55,8 @@ def myFn [ one two ] {
 use 'fs' as fs
 ```
 
+### Exporting
+
+```
+export fs
+```
