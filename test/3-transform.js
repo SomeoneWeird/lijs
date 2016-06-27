@@ -45,28 +45,28 @@ describe('Transform', function () {
     })
     it('should be able to generate object children', function () {
       testTransform('a.b.c.d', [ {
-        'type': 'MemberExpression',
-        'object': {
-          'type': 'MemberExpression',
-          'object': {
-            'type': 'MemberExpression',
-            'object': {
-              'type': 'Identifier',
-              'name': 'a'
+        type: 'MemberExpression',
+        object: {
+          type: 'MemberExpression',
+          object: {
+            type: 'MemberExpression',
+            object: {
+              type: 'Identifier',
+              name: 'a'
             },
-            'property': {
-              'type': 'Identifier',
-              'name': 'b'
+            property: {
+              type: 'Identifier',
+              name: 'b'
             }
           },
-          'property': {
-            'type': 'Identifier',
-            'name': 'c'
+          property: {
+            type: 'Identifier',
+            name: 'c'
           }
         },
-        'property': {
-          'type': 'Identifier',
-          'name': 'd'
+        property: {
+          type: 'Identifier',
+          name: 'd'
         }
       } ])
     })
@@ -289,6 +289,99 @@ describe('Transform', function () {
           }
         }
       }])
+    })
+  })
+  describe('Iterator', function () {
+    it('should generate AST for Iterator for variable', function () {
+      testTransform('@arr { (console.log item) }', [ {
+        type: 'ForStatement',
+        init: {
+          type: 'VariableDeclaration',
+          declarations: [ {
+            type: 'VariableDeclarator',
+            id: {
+              type: 'Identifier',
+              name: 'i'
+            },
+            init: {
+              type: 'Literal',
+              value: 0,
+              raw: '0'
+            }
+          } ],
+          kind: 'var'
+        },
+        test: {
+          type: 'BinaryExpression',
+          operator: '<',
+          left: {
+            type: 'Identifier',
+            name: 'i'
+          },
+          right: {
+            type: 'MemberExpression',
+            object: {
+              type: 'Identifier',
+              name: 'arr'
+            },
+            property: {
+              type: 'Identifier',
+              name: 'length'
+            }
+          }
+        },
+        update: {
+          type: 'UpdateExpression',
+          operator: '++',
+          argument: {
+            type: 'Identifier',
+            name: 'i'
+          },
+          prefix: false
+        },
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'VariableDeclaration',
+            declarations: [ {
+              type: 'VariableDeclarator',
+              id: {
+                type: 'Identifier',
+                name: 'item'
+              },
+              init: {
+                type: 'MemberExpression',
+                object: {
+                  type: 'Identifier',
+                  name: 'arr'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'i'
+                }
+              }
+            } ],
+            kind: 'var'
+          }, {
+            type: 'CallExpression',
+            callee: {
+              type: 'MemberExpression',
+              object: {
+                type: 'Identifier',
+                name: 'console'
+              },
+              property: {
+                type: 'Identifier',
+                name: 'log'
+              }
+            },
+            arguments: [ {
+              type: 'Identifier',
+              name: 'item'
+            } ]
+          } ]
+        }
+      } ])
     })
   })
 })

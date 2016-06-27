@@ -47,6 +47,17 @@ def myFn [ one two ] {
 }
 ```
 
+## Flow control
+
+### iterate
+
+```
+$ arr [ 1 2 3 4 ]
+@arr {
+  (console.log item)
+}
+```
+
 ## Modules
 
 ### Importing

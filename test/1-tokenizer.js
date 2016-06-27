@@ -446,4 +446,18 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('Iterator', function () {
+    it('should parse properly', function () {
+      var code = '@arr'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'Iterator'
+      }, {
+        type: 'Literal',
+        value: 'arr'
+      } ])
+    })
+  })
 })

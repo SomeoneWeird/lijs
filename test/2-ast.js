@@ -332,4 +332,43 @@ describe('AST', function () {
       }, /must export literal/)
     })
   })
+
+  describe('Iterator', function () {
+    it('should generate AST for Iterator with variable', function () {
+      testAST('$ arr [ 1 2 3 4 ]\n@arr { (console.log item) }', [ {
+        type: 'Assignment',
+        name: 'arr',
+        value: {
+          type: 'Array',
+          elements: [ {
+            type: 'NumberLiteral',
+            value: '1'
+          }, {
+            type: 'NumberLiteral',
+            value: '2'
+          }, {
+            type: 'NumberLiteral',
+            value: '3'
+          }, {
+            type: 'NumberLiteral',
+            value: '4'
+          } ]
+        }
+      }, {
+        type: 'Iterator',
+        value: {
+          type: 'Literal',
+          value: 'arr'
+        },
+        body: [ {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'Literal',
+            value: 'item'
+          } ]
+        } ]
+      } ])
+    })
+  })
 })
