@@ -46,10 +46,13 @@ describe('Transform', function () {
     it('should be able to generate object children', function () {
       testTransform('a.b.c.d', [ {
         type: 'MemberExpression',
+        computed: false,
         object: {
           type: 'MemberExpression',
+          computed: false,
           object: {
             type: 'MemberExpression',
+            computed: false,
             object: {
               type: 'Identifier',
               name: 'a'
@@ -197,6 +200,7 @@ describe('Transform', function () {
               type: 'CallExpression',
               callee: {
                 type: 'MemberExpression',
+                computed: false,
                 object: {
                   type: 'Identifier',
                   name: 'console'
@@ -274,6 +278,7 @@ describe('Transform', function () {
           operator: '=',
           left: {
             type: 'MemberExpression',
+            computed: false,
             object: {
               type: 'Identifier',
               name: 'module'
@@ -320,6 +325,7 @@ describe('Transform', function () {
           },
           right: {
             type: 'MemberExpression',
+            computed: false,
             object: {
               type: 'Identifier',
               name: 'arr'
@@ -351,6 +357,7 @@ describe('Transform', function () {
               },
               init: {
                 type: 'MemberExpression',
+                computed: true,
                 object: {
                   type: 'Identifier',
                   name: 'arr'
@@ -366,6 +373,117 @@ describe('Transform', function () {
             type: 'CallExpression',
             callee: {
               type: 'MemberExpression',
+              computed: false,
+              object: {
+                type: 'Identifier',
+                name: 'console'
+              },
+              property: {
+                type: 'Identifier',
+                name: 'log'
+              }
+            },
+            arguments: [ {
+              type: 'Identifier',
+              name: 'item'
+            } ]
+          } ]
+        }
+      } ])
+    })
+    it('should generate AST for Iterator for inline Array', function () {
+      testTransform('@[ 1 2 ] { (console.log item) }', [ {
+        type: 'ForStatement',
+        init: {
+          type: 'VariableDeclaration',
+          declarations: [ {
+            type: 'VariableDeclarator',
+            id: {
+              type: 'Identifier',
+              name: 'i'
+            },
+            init: {
+              type: 'Literal',
+              value: 0,
+              raw: '0'
+            }
+          } ],
+          kind: 'var'
+        },
+        test: {
+          type: 'BinaryExpression',
+          operator: '<',
+          left: {
+            type: 'Identifier',
+            name: 'i'
+          },
+          right: {
+            type: 'MemberExpression',
+            computed: false,
+            object: {
+              type: 'ArrayExpression',
+              elements: [ {
+                type: 'Literal',
+                raw: '1',
+                value: 1
+              }, {
+                type: 'Literal',
+                raw: '2',
+                value: 2
+              } ]
+            },
+            property: {
+              type: 'Identifier',
+              name: 'length'
+            }
+          }
+        },
+        update: {
+          type: 'UpdateExpression',
+          operator: '++',
+          argument: {
+            type: 'Identifier',
+            name: 'i'
+          },
+          prefix: false
+        },
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'VariableDeclaration',
+            declarations: [ {
+              type: 'VariableDeclarator',
+              id: {
+                type: 'Identifier',
+                name: 'item'
+              },
+              init: {
+                type: 'MemberExpression',
+                computed: true,
+                object: {
+                  type: 'ArrayExpression',
+                  elements: [ {
+                    type: 'Literal',
+                    raw: '1',
+                    value: 1
+                  }, {
+                    type: 'Literal',
+                    raw: '2',
+                    value: 2
+                  } ]
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'i'
+                }
+              }
+            } ],
+            kind: 'var'
+          }, {
+            type: 'CallExpression',
+            callee: {
+              type: 'MemberExpression',
+              computed: false,
               object: {
                 type: 'Identifier',
                 name: 'console'
