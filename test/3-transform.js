@@ -7,11 +7,16 @@ var tokenizer = require('../lib/tokenizer')
 var toAST = require('../lib/ast')
 var transform = require('../lib/transform')
 
-function testTransform (code, m) {
+function testTransform (code, m, v) {
   var tokens = tokenizer(code)
   var ast = toAST(tokens)
   var ast2 = transform(ast)
-  assert.deepEqual(ast2.body, m)
+  if (m) {
+    assert.deepEqual(ast2.body, m)
+  }
+  if (v) {
+    assert.deepEqual(ast2._variables, v, 'Variable check mismatch')
+  }
 }
 
 describe('Transform', function () {
@@ -114,7 +119,13 @@ describe('Transform', function () {
           }
         } ],
         kind: 'var'
-      } ])
+      } ], [ 'a' ])
+    })
+    it('should track variable declarations', function () {
+      let v = [ 'a', 'abcd', 'fepjp', 'wfiwepowpiqj', 'qdoiqwndowinhefoih' ]
+      for (var i = 0; i < v.length; i++) {
+        testTransform('$ ' + v[i] + ' 5', null, [ v[i] ])
+      }
     })
   })
   describe('FunctionDeclaration', function () {
@@ -266,7 +277,7 @@ describe('Transform', function () {
           } ],
           kind: 'var'
         }
-      }])
+      }], [ 'hello2' ])
     })
   })
   describe('ExportStatement', function () {
