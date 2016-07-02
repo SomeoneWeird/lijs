@@ -108,6 +108,16 @@ describe('tokenizer', function () {
         } ])
       })
 
+      it('should not parse as KindaCheck', function () {
+        var code = 'kinda123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'kinda123'
+        } ])
+      })
+
       it('should not parse as ContainsCheck', function () {
         var code = 'contains123'
         var tokens = tokenizer(code)
@@ -550,6 +560,17 @@ describe('tokenizer', function () {
 
       assert.deepEqual(tokens, [ {
         type: 'EqualityCheck'
+      } ])
+    })
+  })
+
+  describe('KindaCheck', function () {
+    it('should parse properly', function () {
+      var code = 'kinda '
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'KindaCheck'
       } ])
     })
   })

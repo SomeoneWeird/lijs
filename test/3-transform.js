@@ -727,6 +727,32 @@ describe('Transform', function () {
         }
       }])
     })
+
+    it('should generate IfStatement with kinda test', function () {
+      testTransform('? err kinda true {}', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'IfStatement',
+          test: {
+            type: 'BinaryExpression',
+            operator: '==',
+            left: {
+              type: 'Identifier',
+              name: 'err'
+            },
+            right: {
+              type: 'Identifier',
+              name: 'true'
+            }
+          },
+          consequent: {
+            type: 'BlockStatement',
+            body: []
+          },
+          alternate: null
+        }
+      } ])
+    })
   })
 
   describe('ReturnStatement', function () {

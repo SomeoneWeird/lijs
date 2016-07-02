@@ -95,6 +95,16 @@ $ strCheck 'o w'
 }
 ```
 
+```
+(someFn def cb [ err result ] {
+  ? err kinda true {
+    (console.log 'omg an error!!')
+    ! err
+  }
+  (console.log result)
+})
+```
+
 ## Return Value
 
 ```

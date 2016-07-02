@@ -461,6 +461,24 @@ describe('AST', function () {
         } ]
       } ])
     })
+
+    it('should generate AST for IfStatement where check is kinda', function () {
+      testAST('? err kinda true {}', [ {
+        type: 'IfStatement',
+        check: {
+          type: 'KindaCheck',
+          left: {
+            type: 'Literal',
+            value: 'err'
+          },
+          right: {
+            type: 'Literal',
+            value: 'true'
+          }
+        },
+        pass: []
+      } ])
+    })
   })
 
   describe('ReturnStatement', function () {
