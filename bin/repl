@@ -4,6 +4,8 @@ require('colors')
 
 require('babel-register')
 
+var vm = require('vm')
+
 var tokenize = require('../lib/tokenizer')
 var toAST = require('../lib/ast')
 var transform = require('../lib/transform')
@@ -17,6 +19,9 @@ var server = repl.start({
   output: process.stdout,
   eval: eval
 })
+
+var sandbox = {}
+var context = vm.createContext(sandbox)
 
 server.defineCommand('tokens', {
   action: function (input) {
@@ -66,12 +71,28 @@ server.defineCommand('transform', {
   }
 })
 
+server.defineCommand('generate', {
+  action: function (input) {
+    this.lineParser.reset()
+    this.bufferedCommand = ''
+    try {
+      var js = compiler(input)
+      console.log(js.green)
+    } catch (e) {
+      console.error(e.stack.red)
+    } finally {
+      this.displayPrompt()
+    }
+  }
+})
+
 function eval (cmd, context, filename, callback) {
- try {
-   var out = compiler(cmd)
-   console.log(out.green)
- } catch (e) {
-   console.error(e.stack.red)
- }
- callback()
+  try {
+    var js = compiler(cmd)
+    var script = new vm.Script(js)
+    console.log(vm.runInContext(js, context))
+  } catch (e) {
+    console.error(e.stack.red)
+  }
+  callback()
 }
