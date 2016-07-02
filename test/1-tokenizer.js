@@ -460,4 +460,48 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('IfStatement', function () {
+    it('should parse properly', function () {
+      var code = '?'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'IfStatement'
+      } ])
+    })
+  })
+
+  describe('ElseExpression', function () {
+    it('should parse properly', function () {
+      var code = 'else'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'ElseExpression'
+      } ])
+    })
+  })
+
+  describe('EqualityCheck', function () {
+    it('should parse properly', function () {
+      var code = 'is'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'EqualityCheck'
+      } ])
+    })
+  })
+
+  describe('ContainsCheck', function () {
+    it('should parse properly', function () {
+      var code = 'contains'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'ContainsCheck'
+      } ])
+    })
+  })
 })

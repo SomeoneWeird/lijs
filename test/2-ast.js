@@ -371,4 +371,95 @@ describe('AST', function () {
       } ])
     })
   })
+
+  describe('IfStatement', function () {
+    it('should generate AST for IfStatement', function () {
+      testAST("? hello is 5 { (console.log 'is true') }", [ {
+        type: 'IfStatement',
+        check: {
+          type: 'EqualityCheck',
+          left: {
+            type: 'Literal',
+            value: 'hello'
+          },
+          right: {
+            type: 'NumberLiteral',
+            value: '5'
+          }
+        },
+        pass: [ {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'StringLiteral',
+            value: 'is true'
+          } ]
+        } ]
+      } ])
+    })
+
+    it('should generate AST for IfStatement with Else', function () {
+      testAST("? hello is 5 { (console.log 'ok') } else { (console.log 'fail') }", [ {
+        type: 'IfStatement',
+        check: {
+          type: 'EqualityCheck',
+          left: {
+            type: 'Literal',
+            value: 'hello'
+          },
+          right: {
+            type: 'NumberLiteral',
+            value: '5'
+          }
+        },
+        pass: [ {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'StringLiteral',
+            value: 'ok'
+          } ]
+        } ],
+        fail: [ {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'StringLiteral',
+            value: 'fail'
+          } ]
+        } ]
+      } ])
+    })
+
+    it('should generate AST for IfStatement where check is contains', function () {
+      testAST("? [ 1 2 ] contains 2 { (console.log 'woo') }", [ {
+        type: 'IfStatement',
+        check: {
+          type: 'ContainsCheck',
+          left: {
+            type: 'Array',
+            elements: [ {
+              type: 'NumberLiteral',
+              value: '1'
+            }, {
+              type: 'NumberLiteral',
+              value: '2'
+            } ]
+          },
+          right: {
+            type: 'NumberLiteral',
+            value: '2'
+          }
+        },
+        pass: [ {
+          type: 'FunctionCall',
+          name: 'console.log',
+          args: [ {
+            type: 'StringLiteral',
+            value: 'woo'
+          } ]
+        } ]
+      } ])
+    })
+  })
 })

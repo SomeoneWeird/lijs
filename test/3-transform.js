@@ -530,4 +530,166 @@ describe('Transform', function () {
       } ])
     })
   })
+
+  describe('IfStatement', function () {
+    it('should generate IfStatement', function () {
+      testTransform('? a is 5 {}', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'IfStatement',
+          test: {
+            type: 'BinaryExpression',
+            operator: '===',
+            left: {
+              type: 'Identifier',
+              name: 'a'
+            },
+            right: {
+              type: 'Literal',
+              value: 5,
+              raw: '5'
+            }
+          },
+          consequent: {
+            type: 'BlockStatement',
+            body: []
+          },
+          alternate: null
+        }
+      } ])
+    })
+
+    it('should generate IfStatement with else block', function () {
+      testTransform("? a is 5 { (console.log 'ok') } else { (console.log 'fail') }", [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'IfStatement',
+          test: {
+            type: 'BinaryExpression',
+            operator: '===',
+            left: {
+              type: 'Identifier',
+              name: 'a'
+            },
+            right: {
+              type: 'Literal',
+              value: 5,
+              raw: '5'
+            }
+          },
+          consequent: {
+            type: 'BlockStatement',
+            body: [ {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
+              },
+              arguments: [ {
+                type: 'Literal',
+                value: 'ok',
+                raw: "'ok'"
+              } ]
+            } ]
+          },
+          alternate: {
+            type: 'BlockStatement',
+            body: [ {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
+              },
+              arguments: [ {
+                type: 'Literal',
+                value: 'fail',
+                raw: "'fail'"
+              } ]
+            } ]
+          }
+        }
+      } ])
+    })
+
+    it('should generate IfStatement with contains test', function () {
+      testTransform('? [ 1 2 ] contains 1 { (console.log 1111) }', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'IfStatement',
+          test: {
+            type: 'UnaryExpression',
+            operator: '~',
+            argument: {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'ArrayExpression',
+                  elements: [ {
+                    type: 'Literal',
+                    value: 1,
+                    raw: '1'
+                  }, {
+                    type: 'Literal',
+                    value: 2,
+                    raw: '2'
+                  } ]
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'indexOf'
+                }
+              },
+              arguments: [ {
+                type: 'Literal',
+                value: 1,
+                raw: '1'
+              } ]
+            }
+          },
+          consequent: {
+            type: 'BlockStatement',
+            body: [ {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
+              },
+              arguments: [ {
+                type: 'Literal',
+                value: 1111,
+                raw: '1111'
+              } ]
+            } ]
+          },
+          alternate: null
+        }
+      }])
+    })
+  })
 })

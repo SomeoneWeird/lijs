@@ -64,6 +64,37 @@ $ arr [ 1 2 3 4 ]
 }
 ```
 
+### if
+
+```
+? expression {
+
+} else {
+
+}
+```
+
+```
+$ a 'hello'
+
+? a is 'hello' {
+  (console.log 'hello world!')
+} else {
+  (console.log 'not hello world :(')
+}
+```
+
+```
+$ str 'hello world'
+$ strCheck 'o w'
+
+? str contains strCheck {
+  (console.log str 'contains' strCheck)
+} else {
+  (console.log str 'doesnt contain' strCheck)
+}
+```
+
 ## Modules
 
 ### Importing
