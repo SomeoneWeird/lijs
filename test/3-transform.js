@@ -234,6 +234,42 @@ describe('Transform', function () {
         }
       } ])
     })
+    it('should not set implicit return on invalid type (if etc)', function () {
+      testTransform('def a [] { ? 5 is 5 {} }', [ {
+        type: 'FunctionDeclaration',
+        id: {
+          type: 'Identifier',
+          name: 'a'
+        },
+        params: [],
+        defaults: [],
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'IfStatement',
+            test: {
+              type: 'BinaryExpression',
+              operator: '===',
+              left: {
+                type: 'Literal',
+                value: 5,
+                raw: '5'
+              },
+              right: {
+                type: 'Literal',
+                value: 5,
+                raw: '5'
+              }
+            },
+            consequent: {
+              type: 'BlockStatement',
+              body: []
+            },
+            alternate: null
+          } ]
+        }
+      } ])
+    })
   })
   describe('ImportStatement CallExpression', function () {
     it('should generate CallExpression from ImportStatement', function () {
@@ -690,6 +726,25 @@ describe('Transform', function () {
           alternate: null
         }
       }])
+    })
+  })
+
+  describe('ReturnStatement', function () {
+    it('should generate ReturnStatement', function () {
+      testTransform('!', [ {
+        type: 'ReturnStatement',
+        argument: null
+      } ])
+    })
+    it('should generate ReturnStatement with value,', function () {
+      testTransform('! 12', [ {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'Literal',
+          value: 12,
+          raw: '12'
+        }
+      } ])
     })
   })
 })

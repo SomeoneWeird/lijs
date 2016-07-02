@@ -462,4 +462,22 @@ describe('AST', function () {
       } ])
     })
   })
+
+  describe('ReturnStatement', function () {
+    it('should generate AST for ReturnStatement', function () {
+      testAST('!', [ {
+        type: 'ReturnStatement',
+        value: null
+      } ])
+    })
+    it('should generate AST for ReturnStatement with value', function () {
+      testAST('! 5', [ {
+        type: 'ReturnStatement',
+        value: {
+          type: 'NumberLiteral',
+          value: '5'
+        }
+      } ])
+    })
+  })
 })

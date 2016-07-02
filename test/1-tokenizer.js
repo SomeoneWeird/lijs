@@ -564,4 +564,15 @@ describe('tokenizer', function () {
       } ])
     })
   })
+
+  describe('ReturnStatement', function () {
+    it('should parse properly', function () {
+      var code = '!'
+      var tokens = tokenizer(code)
+
+      assert.deepEqual(tokens, [ {
+        type: 'ReturnStatement'
+      } ])
+    })
+  })
 })

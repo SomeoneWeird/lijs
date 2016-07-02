@@ -95,6 +95,22 @@ $ strCheck 'o w'
 }
 ```
 
+## Return Value
+
+```
+! 5 // return 5
+```
+
+```
+def return5ifStringContains5Else0 [ str ] {
+  ? str contains 5 {
+    ! 5
+  } else {
+    ! 0
+  }
+}
+```
+
 ## Modules
 
 ### Importing
