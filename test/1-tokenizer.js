@@ -67,6 +67,66 @@ describe('tokenizer', function () {
           tokenizer(code)
         }, /Unknown token: '.'/)
       })
+
+      it('should not parse as ImportStatement', function () {
+        var code = 'use123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'use123'
+        } ])
+      })
+
+      it('should not parse as ImportAsStatement', function () {
+        var code = 'as123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'as123'
+        } ])
+      })
+
+      it('should not parse as ExportStatement', function () {
+        var code = 'export123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'export123'
+        } ])
+      })
+
+      it('should not parse as EqualityCheck', function () {
+        var code = 'is123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'is123'
+        } ])
+      })
+
+      it('should not parse as ContainsCheck', function () {
+        var code = 'contains123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'contains123'
+        } ])
+      })
+
+      it('should not parse as Definition', function () {
+        var code = 'def123'
+        var tokens = tokenizer(code)
+
+        assert.deepEqual(tokens, [ {
+          type: 'Literal',
+          value: 'def123'
+        } ])
+      })
     })
 
     describe('NumberLiteral', function () {
@@ -313,7 +373,7 @@ describe('tokenizer', function () {
 
   describe('Definition', function () {
     it('should parse properly', function () {
-      var code = 'def'
+      var code = 'def '
       var tokens = tokenizer(code)
 
       assert.deepEqual(tokens, [ {
@@ -474,7 +534,7 @@ describe('tokenizer', function () {
 
   describe('ElseExpression', function () {
     it('should parse properly', function () {
-      var code = 'else'
+      var code = 'else '
       var tokens = tokenizer(code)
 
       assert.deepEqual(tokens, [ {
@@ -485,7 +545,7 @@ describe('tokenizer', function () {
 
   describe('EqualityCheck', function () {
     it('should parse properly', function () {
-      var code = 'is'
+      var code = 'is '
       var tokens = tokenizer(code)
 
       assert.deepEqual(tokens, [ {
@@ -496,7 +556,7 @@ describe('tokenizer', function () {
 
   describe('ContainsCheck', function () {
     it('should parse properly', function () {
-      var code = 'contains'
+      var code = 'contains '
       var tokens = tokenizer(code)
 
       assert.deepEqual(tokens, [ {
