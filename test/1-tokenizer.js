@@ -5,6 +5,11 @@ var assert = require('assert')
 
 var tokenizer = require('../lib/tokenizer')
 
+function testTokenizer (code, m) {
+  var tokens = tokenizer(code)
+  assert.deepEqual(tokens, m)
+}
+
 describe('tokenizer', function () {
   describe('Whitespace', function () {
     it('should skip whitespace', function () {
@@ -14,7 +19,7 @@ describe('tokenizer', function () {
 
   describe('LineBreak', function () {
     it('should parse properly', function () {
-      assert.deepEqual(tokenizer('\n\n'), [ {
+      testTokenizer('\n\n', [ {
         type: 'LineBreak'
       }, {
         type: 'LineBreak'
@@ -25,575 +30,337 @@ describe('tokenizer', function () {
   describe('Literals', function () {
     describe('Literal', function () {
       it('should parse literal', function () {
-        var code = 'a b c'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'a'
-        }, {
-          type: 'Literal',
-          value: 'b'
-        }, {
-          type: 'Literal',
-          value: 'c'
-        } ])
+        testTokenizer('a b c', [ Literal('a'), Literal('b'), Literal('c') ])
       })
 
       it('should support number in literal (not first char)', function () {
-        var code = 'a1'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'a1'
-        } ])
+        testTokenizer('a1', [ Literal('a1') ])
       })
 
       it('should allow dots in literal', function () {
-        var code = 'a.b'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'a.b'
-        } ])
+        testTokenizer('a.b', [ Literal('a.b') ])
       })
 
       it('should error if dot is first character of literal', function () {
-        var code = '.b'
-
         assert.throws(function () {
-          tokenizer(code)
+          tokenizer('.b')
         }, /Unknown token: '.'/)
       })
 
       it('should not parse as ImportStatement', function () {
-        var code = 'use123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'use123'
-        } ])
+        testTokenizer('use123', [ Literal('use123') ])
       })
 
       it('should not parse as ImportAsStatement', function () {
-        var code = 'as123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'as123'
-        } ])
+        testTokenizer('as123', [ Literal('as123') ])
       })
 
       it('should not parse as ExportStatement', function () {
-        var code = 'export123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'export123'
-        } ])
+        testTokenizer('export123', [ Literal('export123') ])
       })
 
       it('should not parse as EqualityCheck', function () {
-        var code = 'is123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'is123'
-        } ])
+        testTokenizer('is123', [ Literal('is123') ])
       })
 
       it('should not parse as KindaCheck', function () {
-        var code = 'kinda123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'kinda123'
-        } ])
+        testTokenizer('kinda123', [ Literal('kinda123') ])
       })
 
       it('should not parse as ContainsCheck', function () {
-        var code = 'contains123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'contains123'
-        } ])
+        testTokenizer('contains123', [ Literal('contains123') ])
       })
 
       it('should not parse as Definition', function () {
-        var code = 'def123'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'def123'
-        } ])
+        testTokenizer('def123', [ Literal('def123') ])
       })
     })
 
     describe('NumberLiteral', function () {
       it('should parse NumberLiteral', function () {
-        var code = '1 2 3 4'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'NumberLiteral',
-          value: '1'
-        }, {
-          type: 'NumberLiteral',
-          value: '2'
-        }, {
-          type: 'NumberLiteral',
-          value: '3'
-        }, {
-          type: 'NumberLiteral',
-          value: '4'
-        } ])
+        testTokenizer('1 2 3 4', [
+          NumberLiteral(1),
+          NumberLiteral(2),
+          NumberLiteral(3),
+          NumberLiteral(4)
+        ])
       })
     })
 
     describe('StringLiteral', function () {
       it('should parse StringLiteral', function () {
-        var code = "'hello'"
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'StringLiteral',
-          value: 'hello'
-        } ])
+        testTokenizer("'hello'", [ StringLiteral('hello') ])
       })
 
       it('should parse multiple StringLiteral', function () {
-        var code = "'hello   ' 'world''howareyou'"
-        var tokens = tokenizer(code)
-        assert.deepEqual(tokens, [ {
-          type: 'StringLiteral',
-          value: 'hello   '
-        }, {
-          type: 'StringLiteral',
-          value: 'world'
-        }, {
-          type: 'StringLiteral',
-          value: 'howareyou'
-        } ])
+        testTokenizer("'hello   ' 'world''howareyou'", [ StringLiteral('hello   '), StringLiteral('world'), StringLiteral('howareyou') ])
       })
     })
 
     it('should support numbers in strings', function () {
-      var code = "'hello world 1337' 'hi 42'"
-      var tokens = tokenizer(code)
-      assert.deepEqual(tokens, [ {
-        type: 'StringLiteral',
-        value: 'hello world 1337'
-      }, {
-        type: 'StringLiteral',
-        value: 'hi 42'
-      } ])
+      testTokenizer("'hello world 1337' 'hi 42'", [ StringLiteral('hello world 1337'), StringLiteral('hi 42') ])
     })
 
     describe('FloatLiteral', function () {
       it('should parse FloatLiteral', function () {
-        var code = '4.2'
-        var tokens = tokenizer(code)
-        assert.deepEqual(tokens, [ {
-          type: 'FloatLiteral',
-          value: '4.2'
-        } ])
+        testTokenizer('4.2', [ FloatLiteral('4.2') ])
       })
       it('should throw if . is last thing', function () {
-        var code = '42.'
-
         assert.throws(function () {
-          tokenizer(code)
+          tokenizer('42.')
         }, /invalid character ./)
       })
     })
 
     describe('should be able to mix literal types', function () {
       it('Literal + NumberLiteral', function () {
-        var code = 'hello 137 world 42'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'hello'
-        }, {
-          type: 'NumberLiteral',
-          value: '137'
-        }, {
-          type: 'Literal',
-          value: 'world'
-        }, {
-          type: 'NumberLiteral',
-          value: '42'
-        } ])
+        testTokenizer('hello 137 world 42', [
+          Literal('hello'),
+          NumberLiteral('137'),
+          Literal('world'),
+          NumberLiteral('42')
+        ])
       })
 
       it('Literal + StringLiteral', function () {
-        var code = "hello 'hello' world 'world'"
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'hello'
-        }, {
-          type: 'StringLiteral',
-          value: 'hello'
-        }, {
-          type: 'Literal',
-          value: 'world'
-        }, {
-          type: 'StringLiteral',
-          value: 'world'
-        } ])
+        testTokenizer("hello 'hello' world 'world'", [
+          Literal('hello'),
+          StringLiteral('hello'),
+          Literal('world'),
+          StringLiteral('world')
+        ])
       })
 
       it('StringLiteral + NumberLiteral', function () {
-        var code = "'hello' 42 'world' 137"
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'StringLiteral',
-          value: 'hello'
-        }, {
-          type: 'NumberLiteral',
-          value: '42'
-        }, {
-          type: 'StringLiteral',
-          value: 'world'
-        }, {
-          type: 'NumberLiteral',
-          value: '137'
-        } ])
+        testTokenizer("'hello' 42 'world' 137", [
+          StringLiteral('hello'),
+          NumberLiteral('42'),
+          StringLiteral('world'),
+          NumberLiteral('137')
+        ])
       })
 
       it('Literal + NumberLiteral + StringLiteral', function () {
-        var code = "'one' two 3"
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'StringLiteral',
-          value: 'one'
-        }, {
-          type: 'Literal',
-          value: 'two'
-        }, {
-          type: 'NumberLiteral',
-          value: '3'
-        } ])
+        testTokenizer("'one' two 3", [
+          StringLiteral('one'),
+          Literal('two'),
+          NumberLiteral('3')
+        ])
       })
 
       it('Literal + FloatLiteral', function () {
-        var code = 'one 4.2'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'Literal',
-          value: 'one'
-        }, {
-          type: 'FloatLiteral',
-          value: '4.2'
-        } ])
+        testTokenizer('one 4.2', [
+          Literal('one'),
+          FloatLiteral('4.2')
+        ])
       })
 
       it('NumberLiteral + FloatLiteral', function () {
-        var code = '42 4.2'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'NumberLiteral',
-          value: '42'
-        }, {
-          type: 'FloatLiteral',
-          value: '4.2'
-        } ])
+        testTokenizer('42 4.2', [
+          NumberLiteral('42'),
+          FloatLiteral('4.2')
+        ])
       })
 
       it('StringLiteral + FloatLiteral', function () {
-        var code = "'hello' 4.20"
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'StringLiteral',
-          value: 'hello'
-        }, {
-          type: 'FloatLiteral',
-          value: '4.20'
-        } ])
+        testTokenizer("'hello' 4.20", [
+          StringLiteral('hello'),
+          FloatLiteral('4.20')
+        ])
       })
     })
   })
 
   describe('Assignment', function () {
     it('should parse properly', function () {
-      var code = '$'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'AssignmentOperator'
-      } ])
+      testTokenizer('$', [ _('AssignmentOperator') ])
     })
   })
 
   describe('Array', function () {
     describe('ArrayStart', function () {
       it('should parse properly', function () {
-        var code = '['
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'ArrayStart'
-        } ])
+        testTokenizer('[', [
+          _('ArrayStart')
+        ])
       })
     })
     describe('ArrayEnd', function () {
       it('should parse properly', function () {
-        var code = ']'
-        var tokens = tokenizer(code)
-
-        assert.deepEqual(tokens, [ {
-          type: 'ArrayEnd'
-        } ])
+        testTokenizer(']', [
+          _('ArrayEnd')
+        ])
       })
     })
   })
 
   describe('Parenthesis', function () {
     it('should parse properly', function () {
-      var code = '()'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'Parenthesis',
-        value: '('
-      }, {
-        type: 'Parenthesis',
-        value: ')'
-      } ])
+      testTokenizer('()', [
+        _('Parenthesis', '('),
+        _('Parenthesis', ')')
+      ])
     })
   })
 
   describe('Definition', function () {
     it('should parse properly', function () {
-      var code = 'def '
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'Definition'
-      } ])
+      testTokenizer('def ', [
+        _('Definition')
+      ])
     })
   })
 
   describe('DefinitionPoint', function () {
     it('should parse opening DefinitionPoint properly', function () {
-      var code = '{'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'DefinitionPoint',
-        value: '{'
-      } ])
+      testTokenizer('{', [
+        _('DefinitionPoint', '{')
+      ])
     })
     it('should parse opening DefinitionPoint properly', function () {
-      var code = '}'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'DefinitionPoint',
-        value: '}'
-      } ])
+      testTokenizer('}', [
+        _('DefinitionPoint', '}')
+      ])
     })
   })
 
   describe('Comment', function () {
     it('should parse single line comment', function () {
-      var code = '//hello'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'SingleLineComment',
-        value: 'hello'
-      } ])
+      testTokenizer('//hello', [
+        _('SingleLineComment', 'hello')
+      ])
     })
     it('should parse multiline comment', function () {
-      var code = '/*hello\nworld*/'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'MultiLineComment',
-        values: [ 'hello', 'world' ]
-      } ])
+      testTokenizer('/*hello\nworld*/', [
+        _('MultiLineComment', [ 'hello', 'world' ])
+      ])
     })
     it('should pass multiline comment with blank lines', function () {
-      var code = '/*\n\n\n\n*/'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'MultiLineComment',
-        values: [ '', '', '', '', '' ]
-      } ])
+      testTokenizer('/*\n\n\n\n*/', [
+        _('MultiLineComment', [ '', '', '', '', '' ])
+      ])
     })
     it('should parse single-line multiline-style comment', function () {
-      var code = '/* hello */'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'MultiLineComment',
-        values: [ ' hello ' ]
-      } ])
+      testTokenizer('/* hello */', [
+        _('MultiLineComment', [ ' hello ' ])
+      ])
     })
     it('should parse multiline-comment inside single-line comment', function () {
-      var code = '// /* test */'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'SingleLineComment',
-        value: ' /* test */'
-      } ])
+      testTokenizer('// /* test */', [
+        _('SingleLineComment', ' /* test */')
+      ])
     })
     it('should parse single-line inside multiline comment', function () {
-      var code = '/*\n//one\n//two\n//three*/'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'MultiLineComment',
-        values: [ '', '//one', '//two', '//three' ]
-      } ])
+      testTokenizer('/*\n//one\n//two\n//three*/', [
+        _('MultiLineComment', [ '', '//one', '//two', '//three' ])
+      ])
     })
   })
 
   describe('ImportStatement', function () {
     it('should parse properly', function () {
-      var code = "use 'hello'"
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ImportStatement'
-      }, {
-        type: 'StringLiteral',
-        value: 'hello'
-      } ])
+      testTokenizer("use 'hello'", [
+        _('ImportStatement'),
+        StringLiteral('hello')
+      ])
     })
   })
 
   describe('ImportAsStatement', function () {
     it('should parse properly', function () {
-      var code = "use 'hello' as hello"
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ImportStatement'
-      }, {
-        type: 'StringLiteral',
-        value: 'hello'
-      }, {
-        type: 'ImportAsStatement'
-      }, {
-        type: 'Literal',
-        value: 'hello'
-      } ])
+      testTokenizer("use 'hello' as hello", [
+        _('ImportStatement'),
+        StringLiteral('hello'),
+        _('ImportAsStatement'),
+        Literal('hello')
+      ])
     })
   })
 
   describe('ExportStatement', function () {
     it('should parse properly', function () {
-      var code = 'export lol'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ExportStatement'
-      }, {
-        type: 'Literal',
-        value: 'lol'
-      } ])
+      testTokenizer('export lol', [
+        _('ExportStatement'),
+        Literal('lol')
+      ])
     })
   })
 
   describe('Iterator', function () {
     it('should parse properly', function () {
-      var code = '@arr'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'Iterator'
-      }, {
-        type: 'Literal',
-        value: 'arr'
-      } ])
+      testTokenizer('@arr', [
+        _('Iterator'),
+        Literal('arr')
+      ])
     })
   })
 
   describe('IfStatement', function () {
     it('should parse properly', function () {
-      var code = '?'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'IfStatement'
-      } ])
+      testTokenizer('?', [
+        _('IfStatement')
+      ])
     })
   })
 
   describe('ElseExpression', function () {
     it('should parse properly', function () {
-      var code = 'else '
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ElseExpression'
-      } ])
+      testTokenizer('else ', [
+        _('ElseExpression')
+      ])
     })
   })
 
   describe('EqualityCheck', function () {
     it('should parse properly', function () {
-      var code = 'is '
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'EqualityCheck'
-      } ])
+      testTokenizer('is ', [
+        _('EqualityCheck')
+      ])
     })
   })
 
   describe('KindaCheck', function () {
     it('should parse properly', function () {
-      var code = 'kinda '
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'KindaCheck'
-      } ])
+      testTokenizer('kinda ', [
+        _('KindaCheck')
+      ])
     })
   })
 
   describe('ContainsCheck', function () {
     it('should parse properly', function () {
-      var code = 'contains '
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ContainsCheck'
-      } ])
+      testTokenizer('contains ', [
+        _('ContainsCheck')
+      ])
     })
   })
 
   describe('ReturnStatement', function () {
     it('should parse properly', function () {
-      var code = '!'
-      var tokens = tokenizer(code)
-
-      assert.deepEqual(tokens, [ {
-        type: 'ReturnStatement'
-      } ])
+      testTokenizer('!', [
+        _('ReturnStatement')
+      ])
     })
   })
 })
+
+function _ (n, v) {
+  var o = { type: n }
+  if (v) o[Array.isArray(v) ? 'values' : 'value'] = v
+  return o
+}
+function Literal (v) {
+  return _('Literal', v)
+}
+
+function StringLiteral (v) {
+  return _('StringLiteral', v)
+}
+
+function NumberLiteral (v) {
+  return _('NumberLiteral', v)
+}
+
+function FloatLiteral (v) {
+  return _('FloatLiteral', v)
+}
