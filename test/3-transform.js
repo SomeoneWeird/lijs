@@ -5,17 +5,21 @@ var assert = require('assert')
 
 var tokenizer = require('../lib/tokenizer')
 var toAST = require('../lib/ast')
-var transform = require('../lib/transform')
+var transformAST = require('../lib/transform')
 
-function testTransform (code, m, v) {
+function transform (code) {
   var tokens = tokenizer(code)
   var ast = toAST(tokens)
-  var ast2 = transform(ast)
+  return transformAST(ast)
+}
+
+function testTransform (code, m, v) {
+  var ast = transform(code)
   if (m) {
-    assert.deepEqual(ast2.body, m)
+    assert.deepEqual(ast.body, m)
   }
   if (v) {
-    assert.deepEqual(ast2._variables, v, 'Variable check mismatch')
+    assert.deepEqual(ast._variables, v, 'Variable check mismatch')
   }
 }
 
@@ -403,35 +407,21 @@ describe('Transform', function () {
       } ])
     })
     it('should generate AST for Iterator for inline Array', function () {
-      testTransform('@[ 1 2 ] { (console.log item) }', [ {
-        type: 'ForStatement',
-        init: {
+      var ast = transform('@[ 1 2 ] { (console.log item) }')
+
+      assert.equal(ast._variables.length, 1)
+
+      assert.deepEqual(ast.body, [ {
+        type: 'BlockStatement',
+        body: [ {
           type: 'VariableDeclaration',
           declarations: [ {
             type: 'VariableDeclarator',
             id: {
               type: 'Identifier',
-              name: 'i'
+              name: ast._variables[0]
             },
             init: {
-              type: 'Literal',
-              value: 0,
-              raw: '0'
-            }
-          } ],
-          kind: 'var'
-        },
-        test: {
-          type: 'BinaryExpression',
-          operator: '<',
-          left: {
-            type: 'Identifier',
-            name: 'i'
-          },
-          right: {
-            type: 'MemberExpression',
-            computed: false,
-            object: {
               type: 'ArrayExpression',
               elements: [ {
                 type: 'Literal',
@@ -442,74 +432,101 @@ describe('Transform', function () {
                 raw: '2',
                 value: 2
               } ]
-            },
-            property: {
-              type: 'Identifier',
-              name: 'length'
             }
-          }
-        },
-        update: {
-          type: 'UpdateExpression',
-          operator: '++',
-          argument: {
-            type: 'Identifier',
-            name: 'i'
-          },
-          prefix: false
-        },
-        body: {
-          type: 'BlockStatement',
-          body: [ {
+          } ],
+          kind: 'var'
+        }, {
+          type: 'ForStatement',
+          init: {
             type: 'VariableDeclaration',
             declarations: [ {
               type: 'VariableDeclarator',
               id: {
                 type: 'Identifier',
-                name: 'item'
+                name: 'i'
               },
               init: {
-                type: 'MemberExpression',
-                computed: true,
-                object: {
-                  type: 'ArrayExpression',
-                  elements: [ {
-                    type: 'Literal',
-                    raw: '1',
-                    value: 1
-                  }, {
-                    type: 'Literal',
-                    raw: '2',
-                    value: 2
-                  } ]
-                },
-                property: {
-                  type: 'Identifier',
-                  name: 'i'
-                }
+                type: 'Literal',
+                value: 0,
+                raw: '0'
               }
             } ],
             kind: 'var'
-          }, {
-            type: 'CallExpression',
-            callee: {
+          },
+          test: {
+            type: 'BinaryExpression',
+            operator: '<',
+            left: {
+              type: 'Identifier',
+              name: 'i'
+            },
+            right: {
               type: 'MemberExpression',
               computed: false,
               object: {
                 type: 'Identifier',
-                name: 'console'
+                name: ast._variables[0]
               },
               property: {
                 type: 'Identifier',
-                name: 'log'
+                name: 'length'
               }
-            },
-            arguments: [ {
+            }
+          },
+          update: {
+            type: 'UpdateExpression',
+            operator: '++',
+            argument: {
               type: 'Identifier',
-              name: 'item'
+              name: 'i'
+            },
+            prefix: false
+          },
+          body: {
+            type: 'BlockStatement',
+            body: [ {
+              type: 'VariableDeclaration',
+              declarations: [ {
+                type: 'VariableDeclarator',
+                id: {
+                  type: 'Identifier',
+                  name: 'item'
+                },
+                init: {
+                  type: 'MemberExpression',
+                  computed: true,
+                  object: {
+                    type: 'Identifier',
+                    name: ast._variables[0]
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'i'
+                  }
+                }
+              } ],
+              kind: 'var'
+            }, {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
+              },
+              arguments: [ {
+                type: 'Identifier',
+                name: 'item'
+              } ]
             } ]
-          } ]
-        }
+          }
+        } ]
       } ])
     })
   })
