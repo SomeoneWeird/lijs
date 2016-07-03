@@ -270,6 +270,12 @@ describe('Transform', function () {
         }
       } ])
     })
+
+    it('should not crash when function body is empty', function () {
+      assert.doesNotThrow(function () {
+        testTransform('def add [ one two ] {}')
+      })
+    })
   })
   describe('ImportStatement CallExpression', function () {
     it('should generate CallExpression from ImportStatement', function () {
