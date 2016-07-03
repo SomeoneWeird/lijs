@@ -759,6 +759,24 @@ describe('Transform', function () {
         }
       } ])
     })
+
+    it('should generate IfStatement with exists check', function () {
+      testTransform('? err exists {}', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'IfStatement',
+          test: {
+            type: 'Identifier',
+            name: 'err'
+          },
+          consequent: {
+            type: 'BlockStatement',
+            body: []
+          },
+          alternate: null
+        }
+      } ])
+    })
   })
 
   describe('ReturnStatement', function () {

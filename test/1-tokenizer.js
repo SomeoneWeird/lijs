@@ -377,6 +377,14 @@ describe('tokenizer', function () {
     })
   })
 
+  describe('ExistsCheck', function () {
+    it('should parse properly', function () {
+      testTokenizer('exists ', [
+        _('ExistsCheck')
+      ])
+    })
+  })
+
   describe('ReturnStatement', function () {
     it('should parse properly', function () {
       testTokenizer('!', [

@@ -576,6 +576,20 @@ describe('AST', function () {
         pass: []
       } ])
     })
+
+    it('should generate AST for IfStatement where check is exists', function () {
+      testAST('? err exists {}', [ {
+        type: 'IfStatement',
+        check: {
+          type: 'ExistsCheck',
+          left: {
+            type: 'Literal',
+            value: 'err'
+          }
+        },
+        pass: []
+      } ])
+    })
   })
 
   describe('ReturnStatement', function () {

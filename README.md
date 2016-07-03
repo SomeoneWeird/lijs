@@ -107,6 +107,12 @@ $ a 'hello'
 ```
 
 ```
+? err exists {
+  ! err
+}
+```
+
+```
 $ str 'hello world'
 $ strCheck 'o w'
 
