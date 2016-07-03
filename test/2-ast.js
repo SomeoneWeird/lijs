@@ -235,6 +235,103 @@ describe('AST', function () {
       }, /Variable value cannot be assignment/)
     })
   })
+  describe('MakeStatement', function () {
+    it('should generate AST for MakeStatement', function () {
+      testAST('make obj', [ {
+        type: 'ObjectCreation',
+        name: 'obj'
+      } ])
+    })
+    it('should throw if name is not literal', function () {
+      assert.throws(function () {
+        testAST('make 5')
+      }, /Object name must be a literal/)
+    })
+  })
+  describe('GetStatement', function () {
+    it('should generate AST for GetStatement', function () {
+      testAST('get obj key', [ {
+        type: 'ObjectGet',
+        name: 'obj',
+        key: {
+          type: 'Literal',
+          value: 'key'
+        }
+      } ])
+    })
+    it('should generate AST for GetStatement where key is string', function () {
+      testAST("get obj 'key'", [ {
+        type: 'ObjectGet',
+        name: 'obj',
+        key: {
+          type: 'StringLiteral',
+          value: 'key'
+        }
+      } ])
+    })
+    it('should throw if name is not Literal', function () {
+      assert.throws(function () {
+        testAST('get 5 5')
+      }, /Object name must be literal/)
+    })
+    it('should throw if key is not Literal or String', function () {
+      assert.throws(function () {
+        testAST('get obj 5')
+      }, /Object key must be literal or string/)
+    })
+  })
+  describe('SetStatement', function () {
+    it('should generate AST for SetStatement', function () {
+      testAST('set obj a b', [ {
+        type: 'ObjectSet',
+        name: 'obj',
+        key: {
+          type: 'Literal',
+          value: 'a'
+        },
+        value: {
+          type: 'Literal',
+          value: 'b'
+        }
+      } ])
+    })
+    it('should generate AST for SetStatement where value is array', function () {
+      testAST('set obj arr [ 1 2 3 4 ]', [ {
+        type: 'ObjectSet',
+        name: 'obj',
+        key: {
+          type: 'Literal',
+          value: 'arr'
+        },
+        value: {
+          type: 'Array',
+          elements: [ {
+            type: 'NumberLiteral',
+            value: '1'
+          }, {
+            type: 'NumberLiteral',
+            value: '2'
+          }, {
+            type: 'NumberLiteral',
+            value: '3'
+          }, {
+            type: 'NumberLiteral',
+            value: '4'
+          } ]
+        }
+      } ])
+    })
+    it('should throw if name is not Literal', function () {
+      assert.throws(function () {
+        testAST('set 1 2 3')
+      }, /Object name must be literal/)
+    })
+    it('should throw if key is not Literal or String', function () {
+      assert.throws(function () {
+        testAST('set obj 1 2')
+      }, /Object key must be literal or string/)
+    })
+  })
   describe('FunctionDefinition', function () {
     it('should error if name is not literal', function () {
       assert.throws(function () {

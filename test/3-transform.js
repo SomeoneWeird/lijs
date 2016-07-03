@@ -779,4 +779,142 @@ describe('Transform', function () {
       } ])
     })
   })
+
+  describe('ObjectCreation', function () {
+    it('should generate VariableDeclaration', function () {
+      testTransform('make obj', [ {
+        type: 'VariableDeclaration',
+        declarations: [ {
+          type: 'VariableDeclarator',
+          id: {
+            type: 'Identifier',
+            name: 'obj'
+          },
+          init: {
+            type: 'ObjectExpression',
+            properties: []
+          }
+        } ],
+        kind: 'var'
+      } ])
+    })
+  })
+
+  describe('ObjectGet', function () {
+    it('should generate MemberExpression', function () {
+      testTransform('get obj key', [ {
+        type: 'MemberExpression',
+        computed: true,
+        object: {
+          type: 'Identifier',
+          name: 'obj'
+        },
+        property: {
+          type: 'Identifier',
+          name: 'key'
+        }
+      } ])
+    })
+    it('should generate MemberExpression where value is string', function () {
+      testTransform("get obj 'key'", [ {
+        type: 'MemberExpression',
+        computed: true,
+        object: {
+          type: 'Identifier',
+          name: 'obj'
+        },
+        property: {
+          type: 'Literal',
+          value: 'key',
+          raw: "'key'"
+        }
+      } ])
+    })
+  })
+
+  describe('ObjectSet', function () {
+    it('should generate AssignmentExpression where value is literal', function () {
+      testTransform('set obj key value', [ {
+        type: 'AssignmentExpression',
+        operator: '=',
+        left: {
+          type: 'MemberExpression',
+          computed: true,
+          object: {
+            type: 'Identifier',
+            name: 'obj'
+          },
+          property: {
+            type: 'Identifier',
+            name: 'key'
+          }
+        },
+        right: {
+          type: 'Identifier',
+          name: 'value'
+        }
+      } ])
+    })
+    it('should generate AssignmentExpression where value is string', function () {
+      testTransform("set obj key 'value'", [ {
+        type: 'AssignmentExpression',
+        operator: '=',
+        left: {
+          type: 'MemberExpression',
+          computed: true,
+          object: {
+            type: 'Identifier',
+            name: 'obj'
+          },
+          property: {
+            type: 'Identifier',
+            name: 'key'
+          }
+        },
+        right: {
+          type: 'Literal',
+          value: 'value',
+          raw: "'value'"
+        }
+      } ])
+    })
+    it('should generate AssignmentExpression where value is arrau', function () {
+      testTransform('set obj key [ 1 2 3 4 ]', [ {
+        type: 'AssignmentExpression',
+        operator: '=',
+        left: {
+          type: 'MemberExpression',
+          computed: true,
+          object: {
+            type: 'Identifier',
+            name: 'obj'
+          },
+          property: {
+            type: 'Identifier',
+            name: 'key'
+          }
+        },
+        right: {
+          type: 'ArrayExpression',
+          elements: [ {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }, {
+            type: 'Literal',
+            value: '2',
+            raw: 2
+          }, {
+            type: 'Literal',
+            value: '3',
+            raw: 3
+          }, {
+            type: 'Literal',
+            value: '4',
+            raw: 4
+          } ]
+        }
+      } ])
+    })
+  })
 })

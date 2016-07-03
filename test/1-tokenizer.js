@@ -59,6 +59,18 @@ describe('tokenizer', function () {
         testTokenizer('export123', [ Literal('export123') ])
       })
 
+      it('should not parse as MakeStatement', function () {
+        testTokenizer('make123', [ Literal('make123') ])
+      })
+
+      it('should not parse as SetStatement', function () {
+        testTokenizer('set123', [ Literal('set123') ])
+      })
+
+      it('should not parse as GetStatement', function () {
+        testTokenizer('get123', [ Literal('get123') ])
+      })
+
       it('should not parse as EqualityCheck', function () {
         testTokenizer('is123', [ Literal('is123') ])
       })
@@ -282,6 +294,36 @@ describe('tokenizer', function () {
       testTokenizer('export lol', [
         _('ExportStatement'),
         Literal('lol')
+      ])
+    })
+  })
+
+  describe('MakeStatement', function () {
+    it('should parse properly', function () {
+      testTokenizer('make obj', [
+        _('MakeStatement'),
+        Literal('obj')
+      ])
+    })
+  })
+
+  describe('SetStatement', function () {
+    it('should parse properly', function () {
+      testTokenizer('set obj key value', [
+        _('SetStatement'),
+        Literal('obj'),
+        Literal('key'),
+        Literal('value')
+      ])
+    })
+  })
+
+  describe('GetStatement', function () {
+    it('should parse properly', function () {
+      testTokenizer('get obj key', [
+        _('GetStatement'),
+        Literal('obj'),
+        Literal('key')
       ])
     })
   })

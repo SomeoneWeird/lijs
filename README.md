@@ -10,6 +10,28 @@ A lisp-like compile-to JS language.
 [ 1 2 3 4 5 ]
 ```
 
+## Objects
+
+### Creation
+
+Create a new blank object
+
+```
+make obj
+```
+
+### Setting
+
+```
+set obj key value
+```
+
+### Getting
+
+```
+get obj key
+```
+
 ## Comments
 
 ### Single Line
