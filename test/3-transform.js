@@ -276,6 +276,35 @@ describe('Transform', function () {
         testTransform('def add [ one two ] {}')
       })
     })
+
+    it('should not add implicit return if explicit return exists', function () {
+      testTransform('def fn [ a b ] { !5 }', [ {
+        type: 'FunctionDeclaration',
+        id: {
+          type: 'Identifier',
+          name: 'fn'
+        },
+        params: [ {
+          type: 'Identifier',
+          name: 'a'
+        }, {
+          type: 'Identifier',
+          name: 'b'
+        } ],
+        defaults: [],
+        body: {
+          type: 'BlockStatement',
+          body: [ {
+            type: 'ReturnStatement',
+            argument: {
+              type: 'Literal',
+              value: 5,
+              raw: '5'
+            }
+          } ]
+        }
+      } ])
+    })
   })
   describe('ImportStatement CallExpression', function () {
     it('should generate CallExpression from ImportStatement', function () {
