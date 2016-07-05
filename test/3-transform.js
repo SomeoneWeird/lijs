@@ -246,26 +246,29 @@ describe('Transform', function () {
         body: {
           type: 'BlockStatement',
           body: [ {
-            type: 'IfStatement',
-            test: {
-              type: 'BinaryExpression',
-              operator: '===',
-              left: {
-                type: 'Literal',
-                value: 5,
-                raw: '5'
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'IfStatement',
+              test: {
+                type: 'BinaryExpression',
+                operator: '===',
+                left: {
+                  type: 'Literal',
+                  value: 5,
+                  raw: '5'
+                },
+                right: {
+                  type: 'Literal',
+                  value: 5,
+                  raw: '5'
+                }
               },
-              right: {
-                type: 'Literal',
-                value: 5,
-                raw: '5'
-              }
-            },
-            consequent: {
-              type: 'BlockStatement',
-              body: []
-            },
-            alternate: null
+              consequent: {
+                type: 'BlockStatement',
+                body: []
+              },
+              alternate: null
+            }
           } ]
         }
       } ])
@@ -456,23 +459,26 @@ describe('Transform', function () {
             } ],
             kind: 'var'
           }, {
-            type: 'CallExpression',
-            callee: {
-              type: 'MemberExpression',
-              computed: false,
-              object: {
-                type: 'Identifier',
-                name: 'console'
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'CallExpression',
+              callee: {
+                type: 'MemberExpression',
+                computed: false,
+                object: {
+                  type: 'Identifier',
+                  name: 'console'
+                },
+                property: {
+                  type: 'Identifier',
+                  name: 'log'
+                }
               },
-              property: {
+              arguments: [ {
                 type: 'Identifier',
-                name: 'log'
-              }
-            },
-            arguments: [ {
-              type: 'Identifier',
-              name: 'item'
-            } ]
+                name: 'item'
+              } ]
+            }
           } ]
         }
       } ])
@@ -578,23 +584,26 @@ describe('Transform', function () {
               } ],
               kind: 'var'
             }, {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                computed: false,
-                object: {
-                  type: 'Identifier',
-                  name: 'console'
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'MemberExpression',
+                  computed: false,
+                  object: {
+                    type: 'Identifier',
+                    name: 'console'
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'log'
+                  }
                 },
-                property: {
+                arguments: [ {
                   type: 'Identifier',
-                  name: 'log'
-                }
-              },
-              arguments: [ {
-                type: 'Identifier',
-                name: 'item'
-              } ]
+                  name: 'item'
+                } ]
+              }
             } ]
           }
         } ]
@@ -651,47 +660,53 @@ describe('Transform', function () {
           consequent: {
             type: 'BlockStatement',
             body: [ {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                computed: false,
-                object: {
-                  type: 'Identifier',
-                  name: 'console'
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'MemberExpression',
+                  computed: false,
+                  object: {
+                    type: 'Identifier',
+                    name: 'console'
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'log'
+                  }
                 },
-                property: {
-                  type: 'Identifier',
-                  name: 'log'
-                }
-              },
-              arguments: [ {
-                type: 'Literal',
-                value: 'ok',
-                raw: "'ok'"
-              } ]
+                arguments: [ {
+                  type: 'Literal',
+                  value: 'ok',
+                  raw: "'ok'"
+                } ]
+              }
             } ]
           },
           alternate: {
             type: 'BlockStatement',
             body: [ {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                computed: false,
-                object: {
-                  type: 'Identifier',
-                  name: 'console'
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'MemberExpression',
+                  computed: false,
+                  object: {
+                    type: 'Identifier',
+                    name: 'console'
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'log'
+                  }
                 },
-                property: {
-                  type: 'Identifier',
-                  name: 'log'
-                }
-              },
-              arguments: [ {
-                type: 'Literal',
-                value: 'fail',
-                raw: "'fail'"
-              } ]
+                arguments: [ {
+                  type: 'Literal',
+                  value: 'fail',
+                  raw: "'fail'"
+                } ]
+              }
             } ]
           }
         }
@@ -738,24 +753,27 @@ describe('Transform', function () {
           consequent: {
             type: 'BlockStatement',
             body: [ {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                computed: false,
-                object: {
-                  type: 'Identifier',
-                  name: 'console'
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'CallExpression',
+                callee: {
+                  type: 'MemberExpression',
+                  computed: false,
+                  object: {
+                    type: 'Identifier',
+                    name: 'console'
+                  },
+                  property: {
+                    type: 'Identifier',
+                    name: 'log'
+                  }
                 },
-                property: {
-                  type: 'Identifier',
-                  name: 'log'
-                }
-              },
-              arguments: [ {
-                type: 'Literal',
-                value: 1111,
-                raw: '1111'
-              } ]
+                arguments: [ {
+                  type: 'Literal',
+                  value: 1111,
+                  raw: '1111'
+                } ]
+              }
             } ]
           },
           alternate: null
