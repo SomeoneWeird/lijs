@@ -1070,4 +1070,26 @@ describe('Transform', function () {
       } ])
     })
   })
+
+  describe('Modulus', function () {
+    it('should generate BinaryExpression', function () {
+      testTransform('(mod 5 1)', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'BinaryExpression',
+          operator: '%',
+          left: {
+            type: 'Literal',
+            value: '5',
+            raw: 5
+          },
+          right: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }
+        }
+      } ])
+    })
+  })
 })

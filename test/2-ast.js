@@ -673,4 +673,20 @@ describe('AST', function () {
       } ])
     })
   })
+
+  describe('Modulus', function () {
+    it('should generate AST for Modulus', function () {
+      testAST('(mod 5 1)', [ {
+        type: 'Modulus',
+        left: {
+          type: 'NumberLiteral',
+          value: '5'
+        },
+        right: {
+          type: 'NumberLiteral',
+          value: '1'
+        }
+      } ])
+    })
+  })
 })
