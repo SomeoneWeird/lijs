@@ -21,15 +21,15 @@ describe('Generator', function () {
     assert.equal(js, "[\n    'hello',\n    42,\n    4.3\n];")
   })
   it('should generate Function call', function () {
-    let js = getJS('(add 5 3 1)')
-    assert.equal(js, 'add(5, 3, 1);')
+    let js = getJS('(something 5 3 1)')
+    assert.equal(js, 'something(5, 3, 1);')
   })
   it('should generate Assignment', function () {
     let js = getJS('$ a 5')
     assert.equal(js, 'var a = 5;')
   })
   it('should generate Assignment where value is function call', function () {
-    let js = getJS('$ result (add 5 1)')
-    assert.equal(js, 'var result = add(5, 1);')
+    let js = getJS('$ result (addtogether 5 1)')
+    assert.equal(js, 'var result = addtogether(5, 1);')
   })
 })

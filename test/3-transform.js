@@ -134,7 +134,7 @@ describe('Transform', function () {
   })
   describe('FunctionDeclaration', function () {
     it('should generate FunctionDeclaration from FunctionDefinition', function () {
-      testTransform('def addone [ number ] (add number 1)', [ {
+      testTransform('def addone [ number ] (something number 1)', [ {
         type: 'FunctionDeclaration',
         id: {
           type: 'Identifier',
@@ -153,7 +153,7 @@ describe('Transform', function () {
               type: 'CallExpression',
               callee: {
                 type: 'Identifier',
-                name: 'add'
+                name: 'something'
               },
               arguments: [ {
                 type: 'Identifier',
@@ -169,7 +169,7 @@ describe('Transform', function () {
       } ])
     })
     it('should allow multiple body entries (and should set last to return)', function () {
-      testTransform('def log [ one two ] {\n  $ res (add one two)\n  (console.log res)\n}', [ {
+      testTransform('def log [ one two ] {\n  $ res (something one two)\n  (console.log res)\n}', [ {
         type: 'FunctionDeclaration',
         id: {
           type: 'Identifier',
@@ -197,7 +197,7 @@ describe('Transform', function () {
                 type: 'CallExpression',
                 callee: {
                   type: 'Identifier',
-                  name: 'add'
+                  name: 'something'
                 },
                 arguments: [ {
                   type: 'Identifier',
@@ -978,6 +978,94 @@ describe('Transform', function () {
             value: '4',
             raw: 4
           } ]
+        }
+      } ])
+    })
+  })
+
+  describe('Addition', function () {
+    it('should generate BinaryExpression', function () {
+      testTransform('(add 1 1)', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'BinaryExpression',
+          operator: '+',
+          left: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          },
+          right: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }
+        }
+      } ])
+    })
+  })
+
+  describe('Subtraction', function () {
+    it('should generate BinaryExpression', function () {
+      testTransform('(sub 1 1)', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'BinaryExpression',
+          operator: '-',
+          left: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          },
+          right: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }
+        }
+      } ])
+    })
+  })
+
+  describe('Multiplication', function () {
+    it('should generate BinaryExpression', function () {
+      testTransform('(mul 1 1)', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'BinaryExpression',
+          operator: '*',
+          left: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          },
+          right: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }
+        }
+      } ])
+    })
+  })
+
+  describe('Division', function () {
+    it('should generate BinaryExpression', function () {
+      testTransform('(div 1 1)', [ {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'BinaryExpression',
+          operator: '/',
+          left: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          },
+          right: {
+            type: 'Literal',
+            value: '1',
+            raw: 1
+          }
         }
       } ])
     })

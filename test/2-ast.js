@@ -36,15 +36,15 @@ describe('AST', function () {
       } ])
     })
     it('should generate AST for FunctionCall as FunctionCall parameter', function () {
-      testAST('(add 5 (add 10 11))', [ {
+      testAST('(something 5 (something 10 11))', [ {
         type: 'FunctionCall',
-        name: 'add',
+        name: 'something',
         args: [ {
           type: 'NumberLiteral',
           value: '5'
         }, {
           type: 'FunctionCall',
-          name: 'add',
+          name: 'something',
           args: [ {
             type: 'NumberLiteral',
             value: '10'
@@ -213,12 +213,12 @@ describe('AST', function () {
       } ])
     })
     it('should generate AST for assignment where value is FunctionCall', function () {
-      testAST('$ four (add 1 3)', [ {
+      testAST('$ four (something 1 3)', [ {
         type: 'Assignment',
         name: 'four',
         value: {
           type: 'FunctionCall',
-          name: 'add',
+          name: 'something',
           args: [ {
             type: 'NumberLiteral',
             value: '1'
@@ -339,7 +339,7 @@ describe('AST', function () {
       }, /Function name must be literal/)
     })
     it('should generate AST for FunctionDefinition', function () {
-      testAST('def addtwo [ number ] (add number 2)', [ {
+      testAST('def addtwo [ number ] (something number 2)', [ {
         type: 'FunctionDefinition',
         name: 'addtwo',
         args: [ {
@@ -348,7 +348,7 @@ describe('AST', function () {
         } ],
         body: [ {
           type: 'FunctionCall',
-          name: 'add',
+          name: 'something',
           args: [ {
             type: 'Literal',
             value: 'number'
@@ -360,7 +360,7 @@ describe('AST', function () {
       } ])
     })
     it('should generate AST for multiline FunctionDefinition', function () {
-      testAST('def multi [ one two ] {\n  $ res (add one two)\n  (console.log res)\n}', [ {
+      testAST('def multi [ one two ] {\n  $ res (something one two)\n  (console.log res)\n}', [ {
         type: 'FunctionDefinition',
         name: 'multi',
         args: [ {
@@ -375,7 +375,7 @@ describe('AST', function () {
           name: 'res',
           value: {
             type: 'FunctionCall',
-            name: 'add',
+            name: 'something',
             args: [ {
               type: 'Literal',
               value: 'one'
@@ -605,6 +605,70 @@ describe('AST', function () {
         value: {
           type: 'NumberLiteral',
           value: '5'
+        }
+      } ])
+    })
+  })
+
+  describe('Addition', function () {
+    it('should generate AST for Addition', function () {
+      testAST('(add 5 1)', [ {
+        type: 'Addition',
+        left: {
+          type: 'NumberLiteral',
+          value: '5'
+        },
+        right: {
+          type: 'NumberLiteral',
+          value: '1'
+        }
+      } ])
+    })
+  })
+
+  describe('Subtraction', function () {
+    it('should generate AST for Subtraction', function () {
+      testAST('(sub 10 5)', [ {
+        type: 'Subtraction',
+        left: {
+          type: 'NumberLiteral',
+          value: '10'
+        },
+        right: {
+          type: 'NumberLiteral',
+          value: '5'
+        }
+      } ])
+    })
+  })
+
+  describe('Multiplication', function () {
+    it('should generate AST for Multiplication', function () {
+      testAST('(mul 15 3)', [ {
+        type: 'Multiplication',
+        left: {
+          type: 'NumberLiteral',
+          value: '15'
+        },
+        right: {
+          type: 'NumberLiteral',
+          value: '3'
+        }
+      } ])
+    })
+  })
+
+  describe('Division', function () {
+    it('should generate AST for Division', function () {
+      testAST('(div 10 2)', [ {
+        type: 'Division',
+        left: {
+          type: 'NumberLiteral',
+          value: '10'
+        },
+        right: {
+          type: 'NumberLiteral',
+          value: '2'
         }
       } ])
     })
