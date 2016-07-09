@@ -162,3 +162,35 @@ use 'fs' as fs
 ```
 export fs
 ```
+
+### Math
+
+#### Additionion
+
+```
+$ five (add 3 2)
+```
+
+#### Subtraction
+
+```
+$ two (sub 1000 998)
+```
+
+#### Multiplication
+
+```
+$ sixhundred (mul 100 6)
+```
+
+#### Division
+
+```
+$ two (div 10 5)
+```
+
+#### Modulus
+
+```
+$ three (mod 3 100)
+```
